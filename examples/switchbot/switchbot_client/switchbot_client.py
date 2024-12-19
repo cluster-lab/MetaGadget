@@ -4,12 +4,39 @@ from switchbot_client.switchbot_mixin import SwitchBotDeviceOpsMixin
 
 
 class SwitchBotClient(SwitchBotBaseClient, SwitchBotDeviceOpsMixin, CaseInsensitiveInvokeMixin):
+    """
+    Main SwitchBot client implementation combining base functionality, device operations, and case-insensitive method invocation.
+    基本機能、デバイス操作、大文字小文字を区別しないメソッド呼び出しを組み合わせたメインのSwitchBotクライアント実装。
+
+    This class inherits from:
+    - SwitchBotBaseClient: Provides core API communication
+    - SwitchBotDeviceOpsMixin: Adds device-specific operations
+    - CaseInsensitiveInvokeMixin: Enables case-insensitive method calls
+
+    このクラスは以下のクラスを継承します：
+    - SwitchBotBaseClient: コアAPIの通信機能を提供
+    - SwitchBotDeviceOpsMixin: デバイス固有の操作を追加
+    - CaseInsensitiveInvokeMixin: 大文字小文字を区別しないメソッド呼び出しを可能にする
+    """
     def __init__(self, token: str, secret: str):
-        # 多重継承した場合、super()は最初に指定したクラスのメソッドを呼び出すのでsuperで1個ずらしで呼び出すと、
-        # SwitchBotBaseClient -> SwitchBotClientMixin -> CaseInsensitiveInvokeMixin の順に__init__()が呼び出される
-        # When multiple inheritance, super() calls the method of the first specified class, so if you call it with a shift of one with super(),
-        # __init__() is called in the order of SwitchBotBaseClient -> SwitchBotClientMixin -> CaseInsensitiveInvokeMixin
-        super(SwitchBotClient, self).__init__(token, secret) # SwitchBotBaseClient.__init__(self, token, secret)
-        super(SwitchBotBaseClient, self).__init__() # SwitchBotClientMixin.__init__(self)
-        super(SwitchBotDeviceOpsMixin, self).__init__() # CaseInsensitiveInvokeMixin.__init__(self)
+        """
+        Initialize the SwitchBot client with authentication credentials.
+        認証情報を使用してSwitchBotクライアントを初期化します。
+
+        Args:
+            token (str): SwitchBot API token / SwitchBot APIトークン
+            secret (str): SwitchBot API secret / SwitchBot APIシークレット
+
+        Note:
+            When using multiple inheritance, super() calls are made in sequence to properly initialize all parent classes:
+            多重継承を使用する場合、すべての親クラスを適切に初期化するために、super()呼び出しは順番に行われます：
+            1. SwitchBotBaseClient.__init__(token, secret)
+            2. SwitchBotDeviceOpsMixin.__init__()
+            3. CaseInsensitiveInvokeMixin.__init__()
+        """
+        # Initialize parent classes in sequence
+        # 親クラスを順番に初期化
+        super(SwitchBotClient, self).__init__(token, secret)  # SwitchBotBaseClient.__init__(token, secret)
+        super(SwitchBotBaseClient, self).__init__()  # SwitchBotDeviceOpsMixin.__init__()
+        super(SwitchBotDeviceOpsMixin, self).__init__()  # CaseInsensitiveInvokeMixin.__init__()
 
